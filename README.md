@@ -1,6 +1,6 @@
 # Amazon.de Cluster – Trial Task
 
-For the **amazon.de** marketplace and main keyword **"dessertgläser"**, this project:
+For the **amazon.de** marketplace and main keyword **"dessertgläser"**, this project for getting product name:
 
 1. **Builds a thematic cluster** of the 30 most frequently occurring related words, extracted **only from search result titles** (no product detail page crawling).
 2. **Computes proportional weight** per keyword (e.g. Dessertgläser 20, Dessertbecher 15 → weights by occurrence).
