@@ -1,0 +1,21 @@
+# Env and secrets
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+.venv/
+venv/
+*.pyc
+.pytest_cache/
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+.next/
+
+# IDE
+.idea/
+.vscode/
+*.swp
