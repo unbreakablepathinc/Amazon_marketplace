@@ -1,25 +1,34 @@
-# Amazon.de Cluster – Trial Task//
+# Amazon.de Keyword Cluster Analysis
 
-For the **amazon.de** marketplace and main keyword **"dessertgläser"**, this project for getting related product info:
+This project analyzes product visibility on **Amazon.de** for the seed keyword **`dessertgläser`**.
 
-1. **Builds a thematic cluster** of the 30 most frequently occurring related words, extracted **only from search result titles** (no product detail page crawling).
-2. **Computes proportional weight** per keyword (e.g. Dessertgläser 20, Dessertbecher 15 → weights by occurrence).
-3. **Measures product visibility**: for each product (ASIN) across cluster keyword results:
-   - Number of cluster keywords in which it appears
-   - Frequency of appearance in cluster results
-   - Average position
-   - **Frequency of appearance on the same result page as a "KONZEPT" brand product**
+Using Amazon search result data (via Oxylabs), it builds a keyword cluster and calculates visibility metrics for products (ASINs) across cluster queries.
 
-Data is retrieved from **Amazon.de via Oxylabs** Web Scraper API.
+## What This Project Does
 
-## Tech stack
+1. Builds a thematic cluster of the **30 most frequent related terms** found in search result titles.
+2. Computes a **proportional weight** for each cluster keyword based on occurrence frequency.
+3. Measures product visibility for each ASIN across cluster keyword result pages:
+   - Number of cluster keywords where the ASIN appears
+   - Total appearance frequency across all cluster results
+   - Average search position
+   - Frequency of appearing on the same results page as a **KONZEPT** brand product
 
-- **Backend:** FastAPI, Oxylabs client, **Gemini (required** for semantic keyword cluster)
+> Note: Only search result pages are analyzed. Product detail pages are not crawled.
+
+## Data Source
+
+- **Marketplace:** Amazon.de
+- **Acquisition method:** Oxylabs Web Scraper API
+
+## Tech Stack
+
+- **Backend:** FastAPI, Oxylabs client, Gemini API (required for semantic clustering)
 - **Frontend:** Next.js 14 (App Router), React
 
 ## Setup
 
-### 1. Backend (FastAPI)
+### 1) Backend (FastAPI)
 
 ```bash
 cd backend
@@ -29,13 +38,19 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Create `backend/.env` with `OXYLABS_USER`, `OXYLABS_PASSWORD`, and **`GEMINI_API_KEY`** (required for cluster). Then:
+Create `backend/.env` with:
+
+- `OXYLABS_USER`
+- `OXYLABS_PASSWORD`
+- `GEMINI_API_KEY` (required for keyword clustering)
+
+Run the backend:
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2. Frontend (Next.js)
+### 2) Frontend (Next.js)
 
 ```bash
 cd frontend
@@ -43,14 +58,14 @@ npm install
 npm run dev
 ```
 
-## Result table fields
+## Output Fields
 
-| Field                        | Description                                                                                                   |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| ASIN                         | Amazon Standard Identification Number                                                                         |
-| Image                        | Product image URL from search results                                                                         |
-| Price                        | Price (EUR) when available                                                                                    |
-| Cluster keywords present     | Count of cluster keywords in whose results this ASIN appeared                                                 |
-| Frequency in cluster results | Total number of times this ASIN appeared across all cluster keyword result pages                              |
-| Average position             | Mean position (1-based) across those appearances                                                              |
-| Frequency near KONZEPT       | Number of times this product appeared on a result page that also contained at least one KONZEPT brand product |
+| Field | Description |
+| --- | --- |
+| ASIN | Amazon Standard Identification Number |
+| Image | Product image URL from search results |
+| Price | Price (EUR), when available |
+| Cluster keywords present | Number of cluster keywords whose result pages include this ASIN |
+| Frequency in cluster results | Total occurrences of this ASIN across all cluster keyword result pages |
+| Average position | Mean rank position (1-based) across all appearances |
+| Frequency near KONZEPT | Number of result pages where this ASIN appears together with at least one KONZEPT brand product |
